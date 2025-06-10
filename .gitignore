@@ -1,3 +1,4 @@
 instance
 .env
 migrations
+__pycache__
