@@ -63,7 +63,7 @@ class Event(db.Model):
     application_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("applications.application_id"), nullable=True)
     title:Mapped[str] = mapped_column(String(250), nullable=False)
     date:Mapped[str] = mapped_column(DateTime, nullable=False)
-    notes:Mapped[str] = mapped_column(Text, nullable=True)
+    notes:Mapped[str] = mapped_column(Text, nullable=False)
     
 
     def __repr__(self):
