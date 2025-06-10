@@ -18,9 +18,6 @@ def create_app():
 
     from lib.db.models import  User, Application, Event
 
-    # with app.app_context():
-    #     db.create_all()
-  
     from lib.api.routes.routes import api_bp
     app.register_blueprint(api_bp, url_prefix ="/api")
 
