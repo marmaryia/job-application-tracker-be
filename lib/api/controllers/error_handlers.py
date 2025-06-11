@@ -8,3 +8,6 @@ def handle_validation_error(e):
 
 def handle_server_errors(e):
     return jsonify({"message": "Something went wrong"}), 500
+
+def handle_custom_exceptions(e):
+    return jsonify({"message": e.message}), e.status_code
