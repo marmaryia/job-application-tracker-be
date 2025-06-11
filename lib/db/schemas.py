@@ -1,15 +1,16 @@
 from app import ma
 from lib.db.models import User, Application, Event
-from marshmallow_sqlalchemy import fields 
+from marshmallow import fields, validate
 
 
-class UserSchema(ma.SQLAlchemySchema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        load_instance = True
     
-    id = ma.auto_field()
-    email = ma.auto_field()
-    name = ma.auto_field()
+    name = fields.Str(required=True)
+    email = fields.Str(required=True, validate=validate.Email(error="Email address not valid") )
+    password = fields.Str(required=True, validate=validate.And(validate.Length(min=8, error="The password is not valid"), validate.ContainsNoneOf(" ", error="The password is not valid")))
     applications = fields.Nested("ApplicationSchema", many=True)
 
 

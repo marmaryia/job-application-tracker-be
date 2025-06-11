@@ -20,7 +20,9 @@ def create_app():
     from lib.db.models import  User, Application, Event
 
     from lib.api.routes.routes import api_bp
+    from lib.api.controllers.auth import auth_bp
     app.register_blueprint(api_bp, url_prefix ="/api")
+    app.register_blueprint(auth_bp, url_prefix ="/api/users")
 
     migrate.init_app(app, db)
 
