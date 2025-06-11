@@ -1,8 +1,7 @@
 from flask import request, Blueprint
 from lib.db.schemas import user_schema
 
-
-from app import db
+from extensions import db
 
 auth_bp = Blueprint("authentication", __name__)
 

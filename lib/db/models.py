@@ -1,9 +1,9 @@
 from sqlalchemy import Integer, String, DateTime, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from app import db
+from extensions import db, bcrypt
 from typing import List
-from app import bcrypt
+
 
 
 

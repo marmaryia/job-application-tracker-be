@@ -1,4 +1,4 @@
-from app import db
+from extensions import db
 from lib.db.models import User, Application, Event
 from datetime import datetime
 
