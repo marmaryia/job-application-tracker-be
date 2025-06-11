@@ -1,9 +1,8 @@
 from sqlalchemy import Integer, String, DateTime, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, mapped_column, Mapped
-from app import db
+from extensions import db
 from typing import List
-from app import bcrypt
 
 
 
@@ -21,7 +20,7 @@ class User(db.Model):
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        self.password = bcrypt.generate_password_hash(password).decode("utf-8")
+        self.password = password
 
 class Application(db.Model):
     __tablename__ = "applications" 

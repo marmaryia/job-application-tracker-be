@@ -1,4 +1,4 @@
-from app import db
+from extensions import db, bcrypt
 from lib.db.models import User, Application, Event
 from datetime import datetime
 
@@ -8,7 +8,7 @@ def seed(users, applications, events):
     
     new_entries = []
     for user in users:
-        new_user = User(name=user["name"], email=user["email"], password=user["password"])
+        new_user = User(name=user["name"], email=user["email"], password=bcrypt.generate_password_hash(user["password"]).decode("utf-8"))
         new_entries.append(new_user)
 
     for application in applications:

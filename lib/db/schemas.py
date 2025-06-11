@@ -1,4 +1,4 @@
-from app import ma
+from extensions import ma
 from lib.db.models import User, Application, Event
 from marshmallow import fields, validate
 
