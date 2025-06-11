@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
-
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -22,7 +22,7 @@ def create_app():
     from lib.api.routes.routes import api_bp
     app.register_blueprint(api_bp, url_prefix ="/api")
 
-    migrate = Migrate(app, db)
+    migrate.init_app(app, db)
 
     return app
 
