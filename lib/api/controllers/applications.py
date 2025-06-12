@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from sqlalchemy import asc, desc
+from flask_jwt_extended import jwt_required
 
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema
@@ -8,6 +9,7 @@ from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryEr
 applications_bp = Blueprint("applications", __name__)
 
 @applications_bp.get("/<int:user_id>/applications")
+@jwt_required()
 def get_applications_by_user_id(user_id):
     
     if not User.query.filter_by(id=user_id).first():
@@ -37,7 +39,7 @@ def get_applications_by_user_id(user_id):
         query = query.filter(Application.status == "Rejected")
     elif status == "archived":
         query = query.filter(Application.status.in_(["Archived", "Offer accepted", "Offer declined"]))
-    else:
+    elif status:
         raise InvalidQueryError
 
     query = query.order_by(ordering)
