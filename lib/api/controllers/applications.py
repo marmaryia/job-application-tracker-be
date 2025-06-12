@@ -1,10 +1,9 @@
 from flask import Blueprint, request
 from sqlalchemy import asc, desc
 
-from extensions import db
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema
-from lib.api.controllers.exceptions import ResourceNotFoundError
+from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryError
 
 applications_bp = Blueprint("applications", __name__)
 
@@ -16,13 +15,14 @@ def get_applications_by_user_id(user_id):
 
     order = request.args.get("order", "desc")
     sort_by = request.args.get("sort_by", "date_created")
+    status = request.args.get("status")
 
-    allowed_columns = {
+    allowed_sort_columns = {
         "date_created": Application.date_created,
         "recent_activity": Event.date,
     }
 
-    order_column = allowed_columns.get(sort_by)
+    order_column = allowed_sort_columns.get(sort_by)
 
     ordering = asc(order_column) if order == "asc" else desc(order_column)
 
@@ -30,6 +30,15 @@ def get_applications_by_user_id(user_id):
 
     if sort_by == "recent_activity":
         query = query.join(Application.events)
+
+    if status == "active":        
+        query = query.filter(Application.status.in_(["Application sent", "In review", "Offer received"]))
+    elif status == "rejected":
+        query = query.filter(Application.status == "Rejected")
+    elif status == "archived":
+        query = query.filter(Application.status.in_(["Archived", "Offer accepted", "Offer declined"]))
+    else:
+        raise InvalidQueryError
 
     query = query.order_by(ordering)
 

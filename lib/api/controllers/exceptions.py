@@ -12,3 +12,7 @@ class AuthenticationFailedError(CustomException):
 class DuplicateResourceError(CustomException):
     status_code = 400
     message = "This resource already exists"
+
+class InvalidQueryError(CustomException):
+    status_code = 400
+    message = "Bad Request"
