@@ -8,9 +8,10 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         model = User
         load_instance = True
     
+    id = fields.Int(dump_only=True)
     name = fields.Str(required=True)
     email = fields.Str(required=True, validate=validate.Email(error="Email address not valid") )
-    password = fields.Str(required=True, validate=validate.And(validate.Length(min=8, error="Invalid password"), validate.ContainsNoneOf(" ", error="Invalid password")))
+    password = fields.Str(required=True, load_only=True, validate=validate.And(validate.Length(min=8, error="Invalid password"), validate.ContainsNoneOf(" ", error="Invalid password")))
     
 
 
