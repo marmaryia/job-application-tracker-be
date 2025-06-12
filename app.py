@@ -3,8 +3,7 @@ from marshmallow import ValidationError
 
 from extensions import db, ma, migrate, bcrypt, jwt
 from lib.api.controllers.error_handlers import handle_exceptions, handle_validation_error, handle_server_errors, handle_custom_exceptions
-from lib.api.controllers.exceptions import ResourceNotFoundError, AuthenticationFailedError
-
+from lib.api.controllers.exceptions import CustomException
 
 def create_app():
     app = Flask(__name__)
@@ -24,8 +23,7 @@ def create_app():
 
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(Exception, handle_exceptions)
-    app.register_error_handler(ResourceNotFoundError, handle_custom_exceptions)
-    app.register_error_handler(AuthenticationFailedError, handle_custom_exceptions)
+    app.register_error_handler(CustomException, handle_custom_exceptions)
     app.register_error_handler(500, handle_server_errors)
 
  
