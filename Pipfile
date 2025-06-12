@@ -11,6 +11,7 @@ flask-migrate = "*"
 flask-marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 flask-bcrypt = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
