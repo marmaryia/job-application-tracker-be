@@ -20,12 +20,14 @@ users_schema = UserSchema(many= True)
 class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Application
-        excludes = ["user_id"] 
+        exclude = ("user_id", "notes")
     
-    latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id"))
+    events = fields.Nested("EventSchema", many = True)
+    latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"))
+
 
     
-applications_schema = ApplicationSchema(many=True)
+applications_schema = ApplicationSchema(many=True, exclude=["events"])
 
 
 class EventSchema(ma.SQLAlchemySchema):

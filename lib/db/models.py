@@ -63,8 +63,6 @@ class Application(db.Model):
         ),
     )
 
-    def get_recent_event(self):
-        return self.events[0]
 
 class Event(db.Model):
     __tablename__ = "events"
