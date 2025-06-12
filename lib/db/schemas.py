@@ -11,7 +11,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     name = fields.Str(required=True)
     email = fields.Str(required=True, validate=validate.Email(error="Email address not valid") )
     password = fields.Str(required=True, validate=validate.And(validate.Length(min=8, error="Invalid password"), validate.ContainsNoneOf(" ", error="Invalid password")))
-    applications = fields.Nested("ApplicationSchema", many=True)
+    
 
 
 user_schema = UserSchema()

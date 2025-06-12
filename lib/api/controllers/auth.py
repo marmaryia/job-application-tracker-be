@@ -1,7 +1,8 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
+from flask_jwt_extended import create_access_token
 
 from lib.db.schemas import user_schema
-from extensions import db, bcrypt
+from extensions import db
 from lib.db.models import User
 from lib.api.controllers.exceptions import ResourceNotFoundError, AuthenticationFailedError
 
@@ -21,7 +22,7 @@ def add_new_user():
     return {"user": user_schema.dump(new_user)}, 201
 
 
-@auth_bp.route("/login", methods=["POST"])
+@auth_bp.post("/login")
 def login_user():
     email = request.get_json()["email"]
     password = request.get_json()["password"]
@@ -31,8 +32,9 @@ def login_user():
     if not user:
         raise ResourceNotFoundError
     
-    if not bcrypt.check_password_hash(user.password, password):
+    if not user.check_password(password):
         raise AuthenticationFailedError
-
+   
     
-    return "OK"
+    return jsonify({"user": {"id": user.id, "name": user.name, "email": user.email}, 
+                    "access_token": create_access_token(identity=user.id)}), 200
