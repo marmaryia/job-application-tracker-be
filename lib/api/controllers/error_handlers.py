@@ -11,3 +11,6 @@ def handle_server_errors(e):
 
 def handle_custom_exceptions(e):
     return jsonify({"message": e.message}), e.status_code
+
+def handle_not_found(e):
+    return jsonify({"message": "Requested URL does not exist"}), 404
