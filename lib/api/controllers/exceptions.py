@@ -8,3 +8,7 @@ class ResourceNotFoundError(CustomException):
 class AuthenticationFailedError(CustomException):
     status_code = 401
     message = "Authentication Failed"
+
+class DuplicateResourceError(CustomException):
+    status_code = 400
+    message = "This resource already exists"
