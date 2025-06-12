@@ -23,6 +23,9 @@ class User(db.Model):
         self.email = email
         self.password = bcrypt.generate_password_hash(password).decode("utf-8")
 
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
+
 class Application(db.Model):
     __tablename__ = "applications" 
     application_id:Mapped[int] = mapped_column(Integer, primary_key=True)
