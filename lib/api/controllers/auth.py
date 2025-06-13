@@ -41,4 +41,4 @@ def login_user():
         raise AuthenticationFailedError
    
     return jsonify({"user": user_schema.dump(user), 
-                    "access_token": create_access_token(identity=str(user.id))}), 200
+                    "access_token": create_access_token(identity=user)}), 200
