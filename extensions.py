@@ -9,3 +9,7 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 migrate = Migrate()
 jwt = JWTManager()
+
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return str(user.id)
