@@ -9,6 +9,10 @@ class AuthenticationFailedError(CustomException):
     status_code = 401
     message = "Authentication Failed"
 
+class AccessDeniedError(CustomException):
+    status_code = 403
+    message = "Unauthorised"
+
 class DuplicateResourceError(CustomException):
     status_code = 400
     message = "This resource already exists"

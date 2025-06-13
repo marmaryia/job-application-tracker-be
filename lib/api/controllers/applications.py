@@ -1,17 +1,20 @@
 from flask import Blueprint, request
 from sqlalchemy import asc, desc
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema
-from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryError
+from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryError, AccessDeniedError
+from lib.utils.identity_check import identity_check
 
 applications_bp = Blueprint("applications", __name__)
 
 @applications_bp.get("/<int:user_id>/applications")
 @jwt_required()
 def get_applications_by_user_id(user_id):
-    
+    identity = get_jwt_identity()
+    identity_check(identity, user_id)
+
     if not User.query.filter_by(id=user_id).first():
         raise ResourceNotFoundError
 
