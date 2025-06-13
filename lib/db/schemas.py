@@ -14,27 +14,20 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
     password = fields.Str(required=True, load_only=True, validate=validate.And(validate.Length(min=8, error="Invalid password"), validate.ContainsNoneOf(" ", error="Invalid password")))
     
 
-
 user_schema = UserSchema()
 users_schema = UserSchema(many= True)
 
-class ApplicationSchema(ma.SQLAlchemySchema):
+class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Application
+        exclude = ("user_id", "notes")
     
-    application_id = ma.auto_field()
-    user_id = ma.auto_field()
-    company = ma.auto_field()
-    position = ma.auto_field()
-    status = ma.auto_field() 
-    date_created = ma.auto_field()
-    job_url = ma.auto_field()
-    notes = ma.auto_field()
-    events = fields.Nested("EventSchema", many=True, exclude=("user_id", "application_id"))
-    
+    events = fields.Nested("EventSchema", many = True)
+    latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"))
 
-application_schema = ApplicationSchema()
-applications_schema = ApplicationSchema(many=True)
+
+    
+applications_schema = ApplicationSchema(many=True, exclude=["events"])
 
 
 class EventSchema(ma.SQLAlchemySchema):

@@ -37,7 +37,12 @@ class Application(db.Model):
     date_created:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     job_url:Mapped[str] = mapped_column(String(2000), nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
-    events: Mapped[List["Event"]] = relationship("Event")
+    events: Mapped[List["Event"]] = relationship("Event", order_by="desc(Event.date)", lazy="dynamic")
+    
+    @property
+    def latest_event(self):
+        return self.events.order_by(Event.date.desc()).first()
+
 
     def __repr__(self):
         return f"Application with id {self.appliction_id} by {self.user_id} to company {self.company}"
@@ -57,6 +62,7 @@ class Application(db.Model):
             name='status_check'
         ),
     )
+
 
 class Event(db.Model):
     __tablename__ = "events"
