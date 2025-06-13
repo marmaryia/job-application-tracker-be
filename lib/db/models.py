@@ -84,3 +84,8 @@ class Event(db.Model):
         self.title = title
         self.date = date
         self.notes = notes
+
+class TokenBlocklist(db.Model):
+    id:Mapped[int] = mapped_column(Integer, primary_key=True)
+    jti:Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    created_at:Mapped[str] = mapped_column(DateTime, nullable=False)
