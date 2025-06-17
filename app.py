@@ -1,5 +1,6 @@
 from flask import Flask
 from marshmallow import ValidationError
+from flask_cors import CORS
 
 from extensions import db, ma, migrate, bcrypt, jwt
 from lib.api.controllers.error_handlers import handle_exceptions, handle_validation_error, handle_server_errors, handle_custom_exceptions, handle_not_found
@@ -13,6 +14,7 @@ def create_app():
     ma.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+    CORS(app)
 
     from lib.db.models import  User, Application, Event
 
