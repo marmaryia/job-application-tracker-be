@@ -29,9 +29,21 @@
 }
 ```
 
+- `DELETE /api/auth/logout`
+  Adds authentication token to blocklist \
+  Authentication token required \
+  Example response:
+
+```
+{
+	"message": "Logged out successfully"
+}
+```
+
 - `GET /api/users/:user_id/applications` \
   Accepts query parameters:
   order (asc or desc), sort_by (date_created, recent_activity), status (active, rejected, archived)\
+  Authentication token required \
    Example response:
 
 ```

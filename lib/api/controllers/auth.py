@@ -1,10 +1,21 @@
 from flask import request, Blueprint, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt
+from datetime import datetime, timezone
 
 from lib.db.schemas import user_schema
-from extensions import db
-from lib.db.models import User
+from extensions import db, jwt
+from lib.db.models import User, TokenBlocklist
 from lib.api.controllers.exceptions import ResourceNotFoundError, AuthenticationFailedError, DuplicateResourceError
+
+@jwt.user_identity_loader
+def user_identity_lookup(user):
+    return str(user.id)
+
+@jwt.token_in_blocklist_loader
+def check_if_token_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token = TokenBlocklist.query.filter_by(jti=jti).first()
+    return token is not None
 
 auth_bp = Blueprint("authentication", __name__)
 
@@ -42,3 +53,12 @@ def login_user():
    
     return jsonify({"user": user_schema.dump(user), 
                     "access_token": create_access_token(identity=user)}), 200
+
+@auth_bp.delete("/logout")
+@jwt_required()
+def revoke_token():
+    jti = get_jwt()["jti"]
+    now = datetime.now(timezone.utc)
+    db.session.add(TokenBlocklist(jti=jti, created_at=now))
+    db.session.commit()
+    return jsonify(message = "Logged out successfully")
