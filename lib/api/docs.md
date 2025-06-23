@@ -65,3 +65,39 @@
     ]
 }
 ```
+
+- `PATCH /api/applications/:application_id` \
+  Request body:
+  {new_status: "valid status"}\
+  Authentication token required \
+   Example response:
+
+```
+{
+	"application": {
+		"application_id": 1,
+		"company": "OpenAI",
+		"date_created": "2025-05-12T14:30:00",
+		"events": [
+			{
+				"date": "2025-06-23T14:15:41",
+				"event_id": 27,
+				"notes": null,
+				"title": "Status change to Rejected"
+			},
+
+			{
+				"date": "2025-05-10T09:00:00",
+				"event_id": 1,
+				"notes": "Sent resume through company portal.",
+				"title": "Initial Resume Sent"
+			}
+		],
+		"job_url": "https://openai.com/careers/ml-engineer",
+		"notes": "Reached out to recruiter on LinkedIn.",
+		"position": "Machine Learning Engineer",
+		"status": "Rejected",
+		"user_id": 1
+	}
+}
+```
