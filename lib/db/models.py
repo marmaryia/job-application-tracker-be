@@ -72,18 +72,18 @@ class Event(db.Model):
     application_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("applications.application_id"), nullable=True)
     title:Mapped[str] = mapped_column(String(250), nullable=False)
     date:Mapped[str] = mapped_column(DateTime, nullable=False)
-    notes:Mapped[str] = mapped_column(Text, nullable=False)
+    notes:Mapped[str] = mapped_column(Text, nullable=True)
     
 
     def __repr__(self):
         return f"Event with id {self.application_id} by {self.user_id} associated with {self.application_id}"
     
-    def __init__(self, user_id, application_id, title, date, notes):
+    def __init__(self, user_id, application_id, title, *notes, **date):
         self.user_id = user_id
         self.application_id = application_id
         self.title = title
-        self.date = date
-        self.notes = notes
+        self.date = date or func.now()
+        self.notes = notes or None
 
 class TokenBlocklist(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True)
