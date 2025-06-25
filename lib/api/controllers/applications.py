@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema, application_schema
-from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryError, AccessDeniedError
+from lib.api.controllers.exceptions import ResourceNotFoundError, InvalidQueryError, DuplicateResourceError
 from lib.utils.identity_check import identity_check
 from extensions import db
 
@@ -80,14 +80,20 @@ def patch_application_status(application_id):
 @applications_bp.post("/applications")
 @jwt_required()
 def add_new_application():
-    data = request.get_json()
+    body = request.get_json()
+    data = {k: v for k, v in body.items() if k != "allow_duplicates"}
     user = User.query.filter_by(id=data["user_id"]).first()
+    allow_duplicates = body["allow_duplicates"] if "allow_duplicates" in body else False
 
     if not user:
         raise ResourceNotFoundError
     
     identity = get_jwt_identity()
     identity_check(identity, data["user_id"])
+
+    duplicate_applications = db.session.query(Application).filter_by(job_url=data["job_url"], user_id=data["user_id"]).all()
+    if len(duplicate_applications) != 0 and not allow_duplicates:
+        raise DuplicateResourceError
 
     new_application = application_schema.load(data)
     db.session.add(new_application)

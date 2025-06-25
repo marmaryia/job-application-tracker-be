@@ -14,6 +14,7 @@ class AccessDeniedError(CustomException):
     message = "Unauthorised"
 
 class DuplicateResourceError(CustomException):
+    error_code = "DUPLICATE_RESOURCE"
     status_code = 400
     message = "This resource already exists"
 
