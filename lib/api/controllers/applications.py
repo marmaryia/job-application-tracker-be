@@ -90,9 +90,9 @@ def add_new_application():
     identity = get_jwt_identity()
     identity_check(identity, data["user_id"])
 
-    if "job_url" in data and data["job_url"]:
+    if not allow_duplicates and "job_url" in data and data["job_url"]:
         duplicate_applications = db.session.query(Application).filter_by(job_url=data["job_url"], user_id=data["user_id"]).all()
-        if len(duplicate_applications) != 0 and not allow_duplicates:
+        if len(duplicate_applications) != 0:
             duplicate_url_applications = applications_schema_partial.dump(duplicate_applications, many=True)
             raise DuplicateResourceError(duplicate_url_applications)
 
