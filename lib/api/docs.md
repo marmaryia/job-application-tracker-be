@@ -101,3 +101,37 @@
 	}
 }
 ```
+
+- `POST /api/applications` \
+   Request body params: user_id, company, position, status, *job_url, *notes, *date_created, *allow_duplicates
+
+  If date_created is not provided, it defaults to the current timestamp
+
+  If the given user already has an application with the job_url provided, the request will return error, listing applications with the same url, unkess "allow_duplicates" is set to "true".
+
+  Authentication token required
+
+  Example response:
+
+```
+{
+	"application": {
+		"application_id": 36,
+		"company": "ABC Company",
+		"date_created": "2025-06-25T14:31:32",
+		"events": [
+			{
+				"date": "2025-06-25T14:31:32",
+				"event_id": 51,
+				"notes": null,
+				"title": "Application created"
+			}
+		],
+		"job_url": "www.google.com",
+		"notes": "Some notes",
+		"position": "Tester",
+		"status": "Rejected",
+		"user_id": 1
+	}
+}
+```

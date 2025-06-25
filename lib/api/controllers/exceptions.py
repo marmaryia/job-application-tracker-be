@@ -14,8 +14,12 @@ class AccessDeniedError(CustomException):
     message = "Unauthorised"
 
 class DuplicateResourceError(CustomException):
+    error_code = "DUPLICATE_RESOURCE"
     status_code = 400
     message = "This resource already exists"
+
+    def __init__(self, *duplicates):
+        self.duplicates = duplicates or None
 
 class InvalidQueryError(CustomException):
     status_code = 400

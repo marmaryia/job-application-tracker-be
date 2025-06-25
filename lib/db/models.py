@@ -45,16 +45,16 @@ class Application(db.Model):
 
 
     def __repr__(self):
-        return f"Application with id {self.appliction_id} by {self.user_id} to company {self.company}"
+        return f"Application with id {self.application_id} by {self.user_id} to company {self.company}"
     
-    def __init__(self, user_id, company, position, status, date_created, job_url, notes):
+    def __init__(self, user_id, company, position, status,  date_created = func.now(), job_url=None, notes=None ):
         self.user_id = user_id
         self.company = company
         self.position = position
         self.status = status
-        self.date_created = date_created
-        self.job_url = job_url
-        self.notes = notes
+        self.date_created = date_created 
+        self.job_url = job_url 
+        self.notes = notes 
 
     __table_args__ = (
         db.CheckConstraint(
@@ -78,12 +78,12 @@ class Event(db.Model):
     def __repr__(self):
         return f"Event with id {self.application_id} by {self.user_id} associated with {self.application_id}"
     
-    def __init__(self, user_id, application_id, title, *notes, **date):
+    def __init__(self, user_id, application_id, title, notes=None, date=func.now()):
         self.user_id = user_id
         self.application_id = application_id
         self.title = title
-        self.date = date or func.now()
-        self.notes = notes or None
+        self.date = date 
+        self.notes = notes 
 
 class TokenBlocklist(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True)
