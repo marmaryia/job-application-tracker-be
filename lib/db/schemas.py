@@ -28,9 +28,9 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"), dump_only=True)
 
 
-    
 applications_schema = ApplicationSchema(many=True, exclude=("events", "notes", "user_id"))
 application_schema = ApplicationSchema(exclude=["latest_event"])
+applications_schema_partial = ApplicationSchema(only=["application_id", "position", "company", "date_created"])
 
 class EventSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
