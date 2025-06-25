@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from sqlalchemy import asc, desc
 from sqlalchemy.sql import func
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -76,3 +76,21 @@ def patch_application_status(application_id):
     db.session.commit()
     
     return {"application": application_schema.dump(application)}, 200
+
+@applications_bp.post("/applications")
+@jwt_required()
+def add_new_application():
+    data = request.get_json()
+    user = User.query.filter_by(id=data["user_id"]).first()
+
+    if not user:
+        raise ResourceNotFoundError
+    
+    identity = get_jwt_identity()
+    identity_check(identity, data["user_id"])
+
+    new_application = application_schema.load(data)
+    db.session.add(new_application)
+    db.session.commit()
+
+    return {"application": application_schema.dump(new_application)}, 201

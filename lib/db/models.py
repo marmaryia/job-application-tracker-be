@@ -45,16 +45,16 @@ class Application(db.Model):
 
 
     def __repr__(self):
-        return f"Application with id {self.appliction_id} by {self.user_id} to company {self.company}"
+        return f"Application with id {self.application_id} by {self.user_id} to company {self.company}"
     
-    def __init__(self, user_id, company, position, status, date_created, job_url, notes):
+    def __init__(self, user_id, company, position, status,  date_created = func.now(), job_url=None, notes=None, ):
         self.user_id = user_id
         self.company = company
         self.position = position
         self.status = status
-        self.date_created = date_created
-        self.job_url = job_url
-        self.notes = notes
+        self.date_created = date_created 
+        self.job_url = job_url or None
+        self.notes = notes or None
 
     __table_args__ = (
         db.CheckConstraint(
