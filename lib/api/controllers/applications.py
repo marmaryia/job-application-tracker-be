@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from sqlalchemy import asc, desc
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -127,3 +127,16 @@ def delete_application(application_id):
     db.session.commit()
     
     return {}, 204
+
+@applications_bp.get("/applications/<int:application_id>")
+@jwt_required()
+def get_application_by_id(application_id):
+    identity = get_jwt_identity()
+    application = db.session.query(Application).filter_by(application_id=application_id).first()
+    
+    if not application:
+        raise ResourceNotFoundError
+    
+    identity_check(identity, application.user_id)
+
+    return {"application": application_schema.dump(application)}, 201
