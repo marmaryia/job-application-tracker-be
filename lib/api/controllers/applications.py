@@ -110,3 +110,20 @@ def add_new_application():
     db.session.commit()
 
     return {"application": application_schema.dump(new_application)}, 201
+
+
+@applications_bp.delete("/applications/<int:application_id>")
+@jwt_required()
+def delete_application(application_id):
+    identity = get_jwt_identity()
+    application = Application.query.filter_by(application_id=application_id).first()
+    
+    if not application:
+        raise ResourceNotFoundError
+    
+    identity_check(identity, application.user_id)
+    
+    db.session.delete(application)
+    db.session.commit()
+    
+    return {}, 204

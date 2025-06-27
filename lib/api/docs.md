@@ -135,3 +135,8 @@
 	}
 }
 ```
+
+- `DELETE /api/applications/:application_id` \
+   Authentication token required
+
+  No reponse
