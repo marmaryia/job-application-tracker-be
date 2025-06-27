@@ -140,3 +140,32 @@
    Authentication token required
 
   No reponse
+
+- `GET /api/applications/:application_id` \
+   Authentication token required
+
+  Example response:
+
+  ```
+  {
+  	"application": {
+  		"application_id": 4,
+  		"company": "ABC Company",
+  		"date_created": "2025-05-18T11:00:00",
+  		"events": [
+
+  			{
+  				"date": "2025-05-19T09:00:00",
+  				"event_id": 5,
+  				"notes": "Full day onsite with 4 interviewers.",
+  				"title": "Onsite Interview"
+  			}
+  		],
+  		"job_url": "https://jobs.netflix.com/positions/backend-engineer",
+  		"notes": "Negotiating compensation.",
+  		"position": "Backend Engineer",
+  		"status": "Offer received",
+  		"user_id": 1
+  	}
+  }
+  ```
