@@ -19,7 +19,7 @@ class DuplicateResourceError(CustomException):
     message = "This resource already exists"
 
     def __init__(self, *duplicates):
-        self.duplicates = duplicates or None
+        self.duplicates = duplicates[0] or None
 
 class InvalidQueryError(CustomException):
     status_code = 400
