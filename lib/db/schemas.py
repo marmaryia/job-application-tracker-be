@@ -22,7 +22,7 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
         model = Application
         load_instance = True
         
-    user_id = fields.Int()
+    user_id = fields.Int(load_only=True)
     application_id = fields.Int(dump_only=True)
     events = fields.Nested("EventSchema", many = True, exclude=("application_id", "user_id"), dump_only=True)
     latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"), dump_only=True)
