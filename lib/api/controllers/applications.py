@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from sqlalchemy import asc, desc
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import datetime
 
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema, application_schema, applications_schema_partial
@@ -138,5 +139,40 @@ def get_application_by_id(application_id):
         raise ResourceNotFoundError
     
     identity_check(identity, application.user_id)
+
+    return {"application": application_schema.dump(application)}, 200
+
+@applications_bp.put("/applications/<int:application_id>")
+@jwt_required()
+def update_application_by_id(application_id):
+    identity = get_jwt_identity()
+    application = db.session.query(Application).filter_by(application_id=application_id).first()
+    
+    if not application:
+        raise ResourceNotFoundError
+    
+    identity_check(identity, application.user_id)
+
+    new_company = request.get_json()["company"]
+    new_position = request.get_json()["position"]
+    new_date_created = request.get_json()["date_created"]
+    new_status = request.get_json()["status"]
+    new_notes = request.get_json()["notes"]
+    new_job_url =  request.get_json()["job_url"]
+    
+    application.company = new_company
+    application.position = new_position
+    application.date_created = datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")
+    application.status = new_status
+    application.notes = new_notes
+    application.job_url = new_job_url
+
+    application.events[-1].date = datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")
+    application.events = [event for event in application.events if event.date >= datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")]
+    
+    new_event = Event(user_id=application.user_id, application_id=application.application_id, title=f"Information updated")
+    
+    db.session.add(new_event)
+    db.session.commit()
 
     return {"application": application_schema.dump(application)}, 201
