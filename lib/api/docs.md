@@ -169,3 +169,42 @@
   	}
   }
   ```
+
+- `PUT /api/applications/:application_id` \
+   Request body params: company, position, status, *job_url, *notes, date_created
+
+  Authentication token required
+
+  Generates an event to log data change if any of the fields have new data.
+
+  If date_created is updated, also updates the date of the oldest event associated with the application and deletes any events older than the new creation date.
+
+  Example response:
+
+```
+{
+	"application": {
+		"application_id": 34,
+		"company": "ABC",
+		"date_created": "2025-07-03T10:44:58",
+		"events": [
+			{
+				"date": "2025-07-04T16:29:29",
+				"event_id": 70,
+				"notes": "Updated fields: job_url",
+				"title": "Information updated"
+			},
+			{
+				"date": "2025-07-03T10:44:58",
+				"event_id": 63,
+				"notes": null,
+				"title": "Application created"
+			}
+		],
+		"job_url": "new_new_l.com",
+		"notes": "New new notes",
+		"position": "Tester",
+		"status": "Application sent"
+	}
+}
+```
