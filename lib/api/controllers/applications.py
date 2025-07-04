@@ -153,26 +153,30 @@ def update_application_by_id(application_id):
     
     identity_check(identity, application.user_id)
 
-    new_company = request.get_json()["company"]
-    new_position = request.get_json()["position"]
-    new_date_created = request.get_json()["date_created"]
-    new_status = request.get_json()["status"]
-    new_notes = request.get_json()["notes"]
-    new_job_url =  request.get_json()["job_url"]
+    new_data = request.get_json()
+    new_data["notes"] = new_data["notes"] if "notes" in new_data else None 
+    new_data["job_url"] = new_data["job_url"] if "job_url" in new_data else None 
+    new_data["date_created"] = datetime.strptime(new_data["date_created"], "%Y-%m-%dT%H:%M:%S")
     
-    application.company = new_company
-    application.position = new_position
-    application.date_created = datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")
-    application.status = new_status
-    application.notes = new_notes
-    application.job_url = new_job_url
+    updated_fields = []
+    
+    for field, value in new_data.items():
+        if getattr(application, field) != value:
+            setattr(application, field, value)
+            updated_fields.append(field)
 
-    application.events[-1].date = datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")
-    application.events = [event for event in application.events if event.date >= datetime.strptime(new_date_created, "%Y-%m-%dT%H:%M:%S")]
+    if "date_created" in updated_fields:
+        application.events[-1].date = new_data["date_created"]
+        application.events = [event for event in application.events if event.date >= new_data["date_created"]]
     
-    new_event = Event(user_id=application.user_id, application_id=application.application_id, title=f"Information updated")
-    
-    db.session.add(new_event)
+    if len(updated_fields) > 0:
+        event_notes = "Updated fields:"
+        for field in updated_fields:
+            event_notes += f" {field},"
+        event_notes = event_notes[:len(event_notes) - 1]
+        new_event = Event(user_id=application.user_id, application_id=application.application_id, title=f"Information updated", notes=event_notes)
+        db.session.add(new_event)
+
     db.session.commit()
 
     return {"application": application_schema.dump(application)}, 201
