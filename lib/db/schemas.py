@@ -9,7 +9,7 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
     
     id = fields.Int(dump_only=True)
-    name = fields.Str(required=True)
+    name = fields.Str(required=True, validate=validate.Length(min=1))
     email = fields.Str(required=True, validate=validate.Email(error="Email address not valid") )
     password = fields.Str(required=True, load_only=True, validate=validate.And(validate.Length(min=8, error="Invalid password"), validate.ContainsNoneOf(" ", error="Invalid password")))
     
@@ -24,6 +24,8 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
         
     user_id = fields.Int(load_only=True)
     application_id = fields.Int(dump_only=True)
+    company = fields.String(validate=validate.Length(min=1))
+    position = fields.String(validate=validate.Length(min=1))
     events = fields.Nested("EventSchema", many = True, exclude=("application_id", "user_id"), dump_only=True)
     latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"), dump_only=True)
 
@@ -38,6 +40,7 @@ class EventSchema(ma.SQLAlchemyAutoSchema):
 
     user_id = ma.auto_field()
     application_id = ma.auto_field()
+    title = fields.String(validate=validate.Length(min=1))
 
 
 
