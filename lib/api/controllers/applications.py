@@ -166,7 +166,7 @@ def update_application_by_id(application_id):
             updated_fields.append(field)
 
     if "date_created" in updated_fields:
-        application.events[-1].date = new_data["date_created"]
+        application.events.order_by(Event.date.asc()).first().date = new_data["date_created"]
         application.events = [event for event in application.events if event.date >= new_data["date_created"]]
     
     if len(updated_fields) > 0:
