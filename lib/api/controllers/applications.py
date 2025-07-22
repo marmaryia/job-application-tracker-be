@@ -105,7 +105,7 @@ def add_new_application():
     if new_application.status != "Application sent":
         event_title += f" with status {new_application.status}"
 
-    new_event = Event(user_id=data["user_id"], application_id=new_application.application_id, title=event_title)
+    new_event = Event(user_id=data["user_id"], application_id=new_application.application_id, title=event_title, date=new_application.date_created)
     
     db.session.add(new_event)
     db.session.commit()
