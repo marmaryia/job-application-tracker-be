@@ -47,7 +47,7 @@ class Application(db.Model):
     def __repr__(self):
         return f"Application with id {self.application_id} by {self.user_id} to company {self.company}"
     
-    def __init__(self, user_id, company, position, status,  date_created = func.now(), job_url=None, notes=None ):
+    def __init__(self, user_id, company, position, status, date_created = func.now(), job_url=None, notes=None ):
         self.user_id = user_id
         self.company = company
         self.position = position
@@ -71,14 +71,14 @@ class Event(db.Model):
     user_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"), nullable=False)
     application_id:Mapped[int] = mapped_column(Integer, db.ForeignKey("applications.application_id"), nullable=True)
     title:Mapped[str] = mapped_column(String(250), nullable=False)
-    date:Mapped[str] = mapped_column(DateTime, nullable=False)
+    date:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     notes:Mapped[str] = mapped_column(Text, nullable=True)
     
 
     def __repr__(self):
         return f"Event with id {self.application_id} by {self.user_id} associated with {self.application_id}"
     
-    def __init__(self, user_id, application_id, title, notes=None, date=func.now()):
+    def __init__(self, user_id, title, application_id=None, notes=None, date=func.now()):
         self.user_id = user_id
         self.application_id = application_id
         self.title = title

@@ -37,9 +37,11 @@ applications_schema_partial = ApplicationSchema(only=["application_id", "positio
 class EventSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Event
+        load_instance = True
 
     user_id = ma.auto_field()
     application_id = ma.auto_field()
+    event_id = ma.auto_field(dump_only=True)
     title = fields.String(validate=validate.Length(min=1))
 
 
