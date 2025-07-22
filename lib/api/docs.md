@@ -213,3 +213,25 @@
    Authentication token required
 
   No response
+
+- `POST /api/events` \
+   Request body params: user_id, title, *notes, *date, \*application_id
+
+  If date is not provided, it defaults to the current timestamp
+
+  Authentication token required
+
+  Example response:
+
+```
+{
+	"event": {
+		"application_id": 1,
+		"date": "2025-07-05T16:37:29",
+		"event_id": 121,
+		"notes": "some notes",
+		"title": "New event",
+		"user_id": 1
+	}
+}
+```
