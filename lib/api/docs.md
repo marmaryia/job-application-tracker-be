@@ -139,7 +139,7 @@
 - `DELETE /api/applications/:application_id` \
    Authentication token required
 
-  No reponse
+  No response
 
 - `GET /api/applications/:application_id` \
    Authentication token required
@@ -208,3 +208,8 @@
 	}
 }
 ```
+
+- `DELETE /api/events/:event_id` \
+   Authentication token required
+
+  No response

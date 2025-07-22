@@ -20,9 +20,11 @@ def create_app():
 
     from lib.api.controllers.auth import auth_bp
     from lib.api.controllers.applications import applications_bp
+    from lib.api.controllers.events import events_bp
 
     app.register_blueprint(auth_bp, url_prefix ="/api/auth")
     app.register_blueprint(applications_bp, url_prefix ="/api")
+    app.register_blueprint(events_bp, url_prefix ="/api")
 
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(Exception, handle_exceptions)
