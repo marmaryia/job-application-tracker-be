@@ -37,7 +37,7 @@ class Application(db.Model):
     date_created:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     job_url:Mapped[str] = mapped_column(String(2000), nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
-    events: Mapped[List["Event"]] = relationship("Event", order_by="desc(Event.date)", lazy="dynamic")
+    events: Mapped[List["Event"]] = relationship("Event", order_by="desc(Event.date)", lazy="dynamic", cascade="all, delete")
     
     @property
     def latest_event(self):
