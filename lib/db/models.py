@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, DateTime, Text
+from sqlalchemy import Integer, String, DateTime, Text, Boolean
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from extensions import db, bcrypt
@@ -73,17 +73,19 @@ class Event(db.Model):
     title:Mapped[str] = mapped_column(String(250), nullable=False)
     date:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     notes:Mapped[str] = mapped_column(Text, nullable=True)
+    undeletable: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     
 
     def __repr__(self):
         return f"Event with id {self.application_id} by {self.user_id} associated with {self.application_id}"
     
-    def __init__(self, user_id, title, application_id=None, notes=None, date=func.now()):
+    def __init__(self, user_id, title, application_id=None, notes=None, date=func.now(), undeletable=False):
         self.user_id = user_id
         self.application_id = application_id
         self.title = title
         self.date = date 
         self.notes = notes 
+        self.undeletable = undeletable
 
 class TokenBlocklist(db.Model):
     id:Mapped[int] = mapped_column(Integer, primary_key=True)
