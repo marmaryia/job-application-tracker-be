@@ -24,3 +24,7 @@ class DuplicateResourceError(CustomException):
 class InvalidQueryError(CustomException):
     status_code = 400
     message = "Bad Request"
+
+class ActionForbiddenError(CustomException):
+    status_code = 400
+    message = "This action is not allowed"

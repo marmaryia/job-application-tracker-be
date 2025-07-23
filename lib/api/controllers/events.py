@@ -3,7 +3,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from extensions import db 
 from lib.db.models import Event, User, Application
-from lib.api.controllers.exceptions import ResourceNotFoundError
+from lib.api.controllers.exceptions import ResourceNotFoundError, ActionForbiddenError
 from lib.utils.identity_check import identity_check
 from lib.db.schemas import event_schema
 
@@ -17,6 +17,9 @@ def delete_event(event_id):
     
     if not event:
         raise ResourceNotFoundError
+    
+    if event.undeletable:
+        raise ActionForbiddenError
     
     identity_check(identity, event.user_id)
     
