@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from sqlalchemy import asc, desc
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
+from dateutil.parser import parse
 
 from lib.db.models import Application, Event, User
 from lib.db.schemas import applications_schema, application_schema, applications_schema_partial
@@ -156,7 +157,7 @@ def update_application_by_id(application_id):
     new_data = request.get_json()
     new_data["notes"] = new_data["notes"] if "notes" in new_data else None 
     new_data["job_url"] = new_data["job_url"] if "job_url" in new_data else None 
-    new_data["date_created"] = datetime.strptime(new_data["date_created"], "%Y-%m-%dT%H:%M:%S")
+    new_data["date_created"] = parse(new_data["date_created"])
     
     updated_fields = []
     
