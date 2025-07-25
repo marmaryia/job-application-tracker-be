@@ -77,7 +77,7 @@ class Event(db.Model):
     
 
     def __repr__(self):
-        return f"Event with id {self.application_id} by {self.user_id} associated with {self.application_id}"
+        return f"Event with id {self.event_id} by {self.user_id} associated with {self.application_id}"
     
     def __init__(self, user_id, title, application_id=None, notes=None, date=func.now(), undeletable=False):
         self.user_id = user_id
