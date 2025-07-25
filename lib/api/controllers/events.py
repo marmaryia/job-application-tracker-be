@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from datetime import datetime
 
 from extensions import db 
 from lib.db.models import Event, User, Application
@@ -19,7 +20,7 @@ def delete_event(event_id):
         raise ResourceNotFoundError
     
     if event.undeletable:
-        raise ActionForbiddenError
+        raise ActionForbiddenError("Deleting forbidden")
     
     identity_check(identity, event.user_id)
     
@@ -46,7 +47,11 @@ def add_event():
         application = Application.query.filter_by(application_id = event_data["application_id"], user_id = event_data["user_id"]).first()
         if not application:
             raise ResourceNotFoundError
+        
+        if datetime.strptime(event_data["date"], "%Y-%m-%dT%H:%M:%S")  < application.date_created:
+            raise ActionForbiddenError("Date out of sequence")
 
+    
 
     new_event = event_schema.load(event_data)
     

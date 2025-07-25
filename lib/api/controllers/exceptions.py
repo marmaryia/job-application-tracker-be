@@ -27,4 +27,7 @@ class InvalidQueryError(CustomException):
 
 class ActionForbiddenError(CustomException):
     status_code = 400
-    message = "This action is not allowed"
+    error_code = "FORBIDDEN_ACTION"
+
+    def __init__(self, message):
+        self.message = message
