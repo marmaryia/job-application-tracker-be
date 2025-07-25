@@ -1,7 +1,8 @@
 from extensions import ma
 from lib.db.models import User, Application, Event
-from marshmallow import fields, validate
-
+from marshmallow import fields, validate, validates_schema, ValidationError
+from dateutil.parser import parse 
+from datetime import datetime
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -29,6 +30,12 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     events = fields.Nested("EventSchema", many = True, exclude=("application_id", "user_id"), dump_only=True)
     latest_event = fields.Nested("EventSchema", exclude=("application_id", "user_id", "notes"), dump_only=True)
 
+    @validates_schema
+    def validate_schema(self, data, **kwargs):
+        
+        if data["date_created"] > datetime.now():
+            raise ValidationError("Dates in the future are not allowed")
+
 
 applications_schema = ApplicationSchema(many=True, exclude=("events", "notes", "user_id"))
 application_schema = ApplicationSchema(exclude=["latest_event"])
@@ -43,6 +50,12 @@ class EventSchema(ma.SQLAlchemyAutoSchema):
     application_id = ma.auto_field()
     event_id = ma.auto_field(dump_only=True)
     title = fields.String(validate=validate.Length(min=1))
+
+    @validates_schema
+    def validate_schema(self, data, **kwargs):
+        
+        if data["date"] > datetime.now():
+            raise ValidationError("Dates in the future are not allowed")
 
 
 
