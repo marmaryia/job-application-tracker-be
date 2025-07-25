@@ -1,5 +1,5 @@
 from sqlalchemy import Integer, String, DateTime, Text, Boolean
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, asc
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from extensions import db, bcrypt
 from typing import List
@@ -37,11 +37,11 @@ class Application(db.Model):
     date_created:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     job_url:Mapped[str] = mapped_column(String(2000), nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
-    events: Mapped[List["Event"]] = relationship("Event", order_by="asc(Event.date)", lazy="dynamic", cascade="all, delete", back_populates="application")
+    events: Mapped[List["Event"]] = relationship("Event", order_by=lambda: (asc(Event.date), asc(Event.event_id)), lazy="dynamic", cascade="all, delete", back_populates="application")
     
     @property
     def latest_event(self):
-        return (db.session.query(Event).filter_by(application_id=self.application_id).order_by(Event.date.desc()).first())
+        return (db.session.query(Event).filter_by(application_id=self.application_id).order_by(Event.date.desc(), Event.event_id.desc()).first())
 
 
     def __repr__(self):
