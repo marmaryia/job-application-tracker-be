@@ -7,6 +7,7 @@ from lib.db.models import Event, User, Application
 from lib.api.controllers.exceptions import ResourceNotFoundError, ActionForbiddenError
 from lib.utils.identity_check import identity_check
 from lib.db.schemas import event_schema
+from lib.utils.date_check import valid_date
 
 events_bp = Blueprint("events", __name__)
 
@@ -48,7 +49,7 @@ def add_event():
         if not application:
             raise ResourceNotFoundError
         
-        if datetime.strptime(event_data["date"], "%Y-%m-%dT%H:%M:%S")  < application.date_created:
+        if not valid_date(application.date_created, event_data["date"], True ):
             raise ActionForbiddenError("Date out of sequence")
 
     
