@@ -37,11 +37,11 @@ class Application(db.Model):
     date_created:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     job_url:Mapped[str] = mapped_column(String(2000), nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
-    events: Mapped[List["Event"]] = relationship("Event", order_by="desc(Event.date)", lazy="dynamic", cascade="all, delete")
+    events: Mapped[List["Event"]] = relationship("Event", order_by="asc(Event.date)", lazy="dynamic", cascade="all, delete", back_populates="application")
     
     @property
     def latest_event(self):
-        return self.events.order_by(Event.date.desc()).first()
+        return (db.session.query(Event).filter_by(application_id=self.application_id).order_by(Event.date.desc()).first())
 
 
     def __repr__(self):
@@ -74,10 +74,11 @@ class Event(db.Model):
     date:Mapped[str] = mapped_column(DateTime, nullable=False, default=func.now())
     notes:Mapped[str] = mapped_column(Text, nullable=True)
     undeletable: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    application:Mapped["Application"] = relationship("Application", back_populates="events")
     
 
     def __repr__(self):
-        return f"Event with id {self.event_id} by {self.user_id} associated with {self.application_id}"
+        return f"Event with id {self.event_id} by {self.user_id} associated with {self.application_id}, date: {self.date}"
     
     def __init__(self, user_id, title, application_id=None, notes=None, date=func.now(), undeletable=False):
         self.user_id = user_id
