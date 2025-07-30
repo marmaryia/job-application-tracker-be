@@ -1,8 +1,7 @@
 from extensions import ma
 from lib.db.models import User, Application, Event
 from marshmallow import fields, validate, validates_schema, ValidationError
-from dateutil.parser import parse 
-from datetime import datetime
+from datetime import datetime, timezone
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
@@ -33,7 +32,7 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     @validates_schema
     def validate_schema(self, data, **kwargs):
         
-        if data["date_created"] > datetime.now():
+        if data["date_created"].replace(tzinfo=timezone.utc) > datetime.now(tz=timezone.utc):
             raise ValidationError("Dates in the future are not allowed")
 
 
@@ -53,8 +52,7 @@ class EventSchema(ma.SQLAlchemyAutoSchema):
 
     @validates_schema
     def validate_schema(self, data, **kwargs):
-        
-        if data["date"] > datetime.now():
+        if data["date"].replace(tzinfo=timezone.utc) > datetime.now(tz=timezone.utc):
             raise ValidationError("Dates in the future are not allowed")
 
 
