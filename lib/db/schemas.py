@@ -32,7 +32,7 @@ class ApplicationSchema(ma.SQLAlchemyAutoSchema):
     @validates_schema
     def validate_schema(self, data, **kwargs):
         
-        if data["date_created"] > datetime.now():
+        if data["date_created"] > datetime.now(tz=timezone.utc):
             raise ValidationError("Dates in the future are not allowed")
 
 
