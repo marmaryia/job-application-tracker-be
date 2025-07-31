@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from sqlalchemy import asc, desc
+from sqlalchemy import asc, desc, or_
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from dateutil.parser import parse
@@ -24,6 +24,7 @@ def get_applications_by_user_id(user_id):
     order = request.args.get("order", "desc")
     sort_by = request.args.get("sort_by", "date_created")
     status = request.args.get("status")
+    search = request.args.get("search")
 
     allowed_sort_columns = {
         "date_created": Application.date_created,
@@ -35,6 +36,9 @@ def get_applications_by_user_id(user_id):
     ordering = asc(order_column) if order == "asc" else desc(order_column)
 
     query = Application.query.filter_by(user_id=user_id)
+    
+    if search:
+        query = query.filter(or_(Application.company.ilike(f"%{search}%"), Application.position.ilike(f"%{search}%")))
 
     if sort_by == "recent_activity":
         query = query.join(Application.events)
