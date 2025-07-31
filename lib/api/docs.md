@@ -42,7 +42,8 @@
 
 - `GET /api/users/:user_id/applications` \
   Accepts query parameters:
-  order (asc or desc), sort_by (date_created, recent_activity), status (active, rejected, archived)\
+  order (asc or desc), sort_by (date_created, recent_activity), status (active, rejected, archived), search\
+  "Search" parameter value is checked against the company and position columns\
   Authentication token required \
    Example response:
 
