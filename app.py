@@ -6,9 +6,12 @@ from extensions import db, ma, migrate, bcrypt, jwt
 from lib.api.controllers.error_handlers import handle_exceptions, handle_validation_error, handle_server_errors, handle_custom_exceptions, handle_not_found
 from lib.api.controllers.exceptions import CustomException
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
     app.config.from_pyfile("lib/config.py")
+
+    if test_config:
+        app.config.update(test_config)
 
     db.init_app(app)
     ma.init_app(app)
