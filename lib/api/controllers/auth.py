@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from lib.db.schemas import user_schema
 from extensions import db, jwt
 from lib.db.models import User, TokenBlocklist
-from lib.api.controllers.exceptions import ResourceNotFoundError, AuthenticationFailedError, DuplicateResourceError
+from lib.api.controllers.exceptions import ResourceNotFoundError, AuthenticationFailedError, DuplicateResourceError, InvalidQueryError
 
 @jwt.user_identity_loader
 def user_identity_lookup(user):
@@ -42,6 +42,9 @@ def add_new_user():
 def login_user():
     email = request.get_json()["email"]
     password = request.get_json()["password"]
+
+    if not email or not password:
+        raise InvalidQueryError
 
     user = User.query.filter_by(email=email).first()
 

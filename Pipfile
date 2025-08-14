@@ -13,6 +13,8 @@ marshmallow-sqlalchemy = "*"
 flask-bcrypt = "*"
 flask-jwt-extended = "*"
 flask-cors = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [dev-packages]
 
