@@ -1,7 +1,6 @@
 from flask import Blueprint, request
 from sqlalchemy import asc, desc, or_
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import datetime
 from dateutil.parser import parse
 
 from lib.db.models import Application, Event, User
@@ -15,11 +14,12 @@ applications_bp = Blueprint("applications", __name__)
 @applications_bp.get("/users/<int:user_id>/applications")
 @jwt_required()
 def get_applications_by_user_id(user_id):
-    identity = get_jwt_identity()
-    identity_check(identity, user_id)
 
     if not User.query.filter_by(id=user_id).first():
         raise ResourceNotFoundError
+
+    identity = get_jwt_identity()
+    identity_check(identity, user_id)
 
     order = request.args.get("order", "desc")
     sort_by = request.args.get("sort_by", "date_created")
@@ -31,7 +31,7 @@ def get_applications_by_user_id(user_id):
         "recent_activity": Event.date,
     }
 
-    order_column = allowed_sort_columns.get(sort_by)
+    order_column = allowed_sort_columns.get(sort_by, "date_created")
 
     ordering = asc(order_column) if order == "asc" else desc(order_column)
 

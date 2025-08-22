@@ -1,46 +1,10 @@
-import pytest
-
-from lib.db.seed import seed
-from lib.db.data import users, applications, events
-from app import create_app
-
-
-@pytest.fixture
-def app():
-    app = create_app({
-        "TESTING": True,
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "SQLALCHEMY_TRACK_MODIFICATIONS": False
-    })
-
-    with app.app_context():
-        seed(users, applications, events)
-
-    yield app
-
-@pytest.fixture
-def client(app):
-    return app.test_client()
-
-@pytest.fixture
-def auth_header(app):
-
-    class Dummy:
-        def __init__(self, id):
-            self.id = id 
-    dummy_user = Dummy(1)
-    from flask_jwt_extended import create_access_token
-    with app.app_context():
-        token = create_access_token(identity=dummy_user)
-    return {"Authorization": f"Bearer {token}"}
-
 def test_register_success(client):
     """
     Accepts a request body with name, email and password and returns the newly created user as JSON.
     """
     response = client.post("api/auth/register", json={"name": "Test Name", "email": "test@email.com", "password": "11111111"})
     assert response.status_code == 201
-    assert response.json["user"] == {"name": "Test Name", "email": "test@email.com", "id": 4}
+    assert response.json["user"] == {"name": "Test Name", "email": "test@email.com", "id": 5}
 
 def test_register_duplicate_email(client):
     """

@@ -21,9 +21,9 @@ def test_seed(app):
         seed(users, applications, events)
 
         users_from_db = db.session.query(User).all()
-        assert len(users_from_db) == 3
+        assert len(users_from_db) == 4
         for user in users_from_db:
-            assert user.id in [1, 2, 3]
+            assert user.id in [1, 2, 3, 4]
 
         applications_from_db = db.session.query(Application).all()
         assert len(applications_from_db) == 10

@@ -1,6 +1,7 @@
 users = [{"name": "user1", "email": "user1@email.com", "password": "123456"},
          {"name": "user2", "email": "user2@email.com", "password": "123456"},
-         {"name": "user3", "email": "user3@email.com", "password": "123456"}]
+         {"name": "user3", "email": "user3@email.com", "password": "123456"},
+         {"name": "user4", "email": "user4@email.com", "password": "123456"}]
 
 applications = [
     {
@@ -61,7 +62,7 @@ applications = [
         "user_id": 1,
         "company": "LinkedIn",
         "position": "Frontend Engineer",
-        "status": "In review",
+        "status": "Archived",
         "date_created": "2025-05-25 14:15:00",
         "job_url": None,
         "notes": "Waiting to hear back after phone interview."
